@@ -1,7 +1,7 @@
 # Compiler/linker options
 CC = gcc
 CFLAGS = -c -Wno-unused -Wno-unused-macros -g
-LDFLAGS = 
+LDFLAGS = -l argp
 V = @
 
 # Folders
