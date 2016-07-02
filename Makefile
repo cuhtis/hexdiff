@@ -1,5 +1,5 @@
 # Compiler/linker options
-CC = gcc
+CC = g++
 CFLAGS = -c -Wno-unused -Wno-unused-macros -g
 LDFLAGS = -l argp
 V = @
@@ -10,10 +10,10 @@ OBJ_DIR = obj
 BIN_DIR = .
 
 # Files
-SRC = hexdiff.c
+SRC = hexdiff.cpp
 EXE = hexdiff
-SRC_FILES = $(SRC:%.c=$(SRC_DIR)/%.c)
-OBJ_FILES = $(SRC:%.c=$(OBJ_DIR)/%.o)
+SRC_FILES = $(SRC:%.cpp=$(SRC_DIR)/%.cpp)
+OBJ_FILES = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 EXE_FILES = $(EXE:%=$(BIN_DIR)/%)
 
 # Phony
@@ -25,7 +25,7 @@ $(EXE_FILES): $(OBJ_FILES)
 	$(V)$(CC) $(LDFLAGS) -o $@ $^
 	@echo Build successful!
 
-$(OBJ_FILES): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ_FILES): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo + $<
 	$(V)mkdir -p $(@D)
 	$(V)$(CC) $(CFLAGS) -o $@ $<

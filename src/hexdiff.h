@@ -5,14 +5,18 @@
  *  Header file for hexdiff.c
  */
 
+#define ARG_KEY_QUIET     'q'
+#define ARG_KEY_RECURSIVE 'r'
+#define ARG_KEY_VERBOSE   'v'
+
 const char *argp_program_version = "Hexdiff v0.1";
 const char *argp_program_bug_address = "curtis.li@nyu.edu";
 static char doc[] = "Get the diff of binary files.";
 static char args_doc[] = "FILE1 FILE2";
 static struct argp_option options[] = {
-  { "quiet", 'q', 0, 0, "Run in quiet mode."},
-  { "recursive", 'r', 0, 0, "Run in recursive mode."},
-  { "verbose", 'v', 0, 0, "Run in verbose mode."},
+  { "quiet", ARG_KEY_QUIET, 0, 0, "Run in quiet mode."},
+  { "recursive", ARG_KEY_RECURSIVE, 0, 0, "Run in recursive mode."},
+  { "verbose", ARG_KEY_VERBOSE, 0, 0, "Run in verbose mode."},
   { 0 }
 };
 

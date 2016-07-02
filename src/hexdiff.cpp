@@ -20,26 +20,34 @@
  *  Main function
  */
 int main(int argc, char** argv) {
+  FILE *f1, *f2;
   struct arguments arguments;
+
   arguments.quiet = 0;
   arguments.recursive = 0;
   arguments.verbose = 0;
 
   argp_parse(&argp, argc, argv, 0, 0, &arguments);
+
+  f1 = fopen(arguments.arg1, "r");
+  f2 = fopen(arguments.arg2, "r");
+  
+  fclose(f1);
+  fclose(f2);
 }
 
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
-  struct arguments *arguments = state->input;
+  struct arguments *arguments =  (struct arguments *) state->input;
   switch (key) {
-    case 'q':
+    case ARG_KEY_QUIET:
       arguments->quiet = 1;
       arguments->verbose = 0;
       break;
-    case 'r':
+    case ARG_KEY_RECURSIVE:
       arguments->recursive = 1;
       break;
-    case 'v':
+    case ARG_KEY_VERBOSE:
       arguments->quiet = 0;
       arguments->verbose = 1;
       break;
