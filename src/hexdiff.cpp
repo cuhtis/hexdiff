@@ -132,7 +132,7 @@ void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
       return;
     } else if (b1) {
       DEBUG(cout << "BASE RIGHT" << endl);
-      cout << RED << hex(c1) << ": " << c2 << END << endl;
+      cout << RED << hex(c2) << ": " << c2 << END << endl;
       f1->clear();
       f1->seekg(i);
     } else if (b2) {
@@ -148,7 +148,7 @@ void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   if ((*lookup)[i+1][j] == (*lookup)[i][j+1]) {
     // Same regardless of which way we go, just take a random path...
     DEBUG(cout << "GO RAND" << endl);
-    cout << RED << hex(c1) << ": " << c2 << END << endl;
+    cout << RED << hex(c2) << ": " << c2 << END << endl;
     f1->seekg(i);
   } else if ((*lookup)[i+1][j] > (*lookup)[i][j+1]) {
     // Go down
@@ -157,7 +157,7 @@ void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
     f2->seekg(j);
   } else {
     DEBUG(cout << "GO RIGHT" << endl);
-    cout << RED << hex(c1) << ": " << c2 << END << endl;
+    cout << RED << hex(c2) << ": " << c2 << END << endl;
     // Go right
     f1->seekg(i);
   }
