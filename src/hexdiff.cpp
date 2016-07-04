@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
   f2.open(arguments.arg2, ios::in | ios::binary);
 
   vector<vector<int> > lookup = vector<vector<int> >(getSize(&f1), vector<int>(getSize(&f2)));;
+  gcs(&lookup, &f1, &f2);
   
   f1.clear();
   f1.seekg(0, f1.beg);
