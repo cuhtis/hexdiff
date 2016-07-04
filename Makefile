@@ -10,7 +10,8 @@ OBJ_DIR = obj
 BIN_DIR = .
 
 # Files
-SRC = hexdiff.cpp
+SRC = parsecli.cpp \
+			hexdiff.cpp
 EXE = hexdiff
 SRC_FILES = $(SRC:%.cpp=$(SRC_DIR)/%.cpp)
 OBJ_FILES = $(SRC:%.cpp=$(OBJ_DIR)/%.o)

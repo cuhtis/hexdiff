@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <argp.h>
 #include <stdbool.h>
 #include <assert.h>
 #include <iostream>
@@ -14,6 +13,8 @@
 #include <vector>
 
 #include "hexdiff.h"
+#include "colours.h"
+#include "parsecli.h"
 
 #define DEBUG(a) 
 
@@ -31,11 +32,7 @@ using namespace std;
 int main(int argc, char** argv) {
   struct arguments arguments;
 
-  arguments.quiet = 0;
-  arguments.recursive = 0;
-  arguments.verbose = 0;
-
-  argp_parse(&argp, argc, argv, 0, 0, &arguments);
+  parseCli(&arguments, argc, argv);
 
   ifstream f1, f2;
   f1.open(arguments.arg1, ios::in | ios::binary);
@@ -166,34 +163,3 @@ void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   gcsSol(lookup, f1, f2);
 }
 
-static error_t parse_opt(int key, char *arg, struct argp_state *state) {
-  struct arguments *arguments =  (struct arguments *) state->input;
-  switch (key) {
-    case ARG_KEY_QUIET:
-      arguments->quiet = 1;
-      arguments->verbose = 0;
-      break;
-    case ARG_KEY_RECURSIVE:
-      arguments->recursive = 1;
-      break;
-    case ARG_KEY_VERBOSE:
-      arguments->quiet = 0;
-      arguments->verbose = 1;
-      break;
-    case ARGP_KEY_ARG:
-      if (!arguments->arg1) {
-        arguments->arg1 = arg;
-      } else if (!arguments->arg2) {
-        arguments->arg2 = arg;
-      }
-      break;
-    case ARGP_KEY_END:
-      if (state->arg_num < 2) {
-        argp_usage(state);
-      }
-      break;
-    default:
-      return ARGP_ERR_UNKNOWN;
-  }
-  return 0;
-}
