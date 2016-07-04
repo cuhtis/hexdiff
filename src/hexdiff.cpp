@@ -3,9 +3,6 @@
  *  Written by Curtis Li
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include <assert.h>
 #include <iostream>
 #include <fstream>
@@ -26,32 +23,42 @@
 
 using namespace std;
 
+
 /*
  *  Main function
  */
 int main(int argc, char** argv) {
   struct arguments arguments;
+  ifstream f1, f2;
 
+  // Parse the CLI
   parseCli(&arguments, argc, argv);
 
-  ifstream f1, f2;
+  // Open the files
   f1.open(arguments.arg1, ios::in | ios::binary);
   f2.open(arguments.arg2, ios::in | ios::binary);
 
+  // Solve for the Greatest Common Subsequence (GCS)
   vector<vector<int> > lookup = vector<vector<int> >(getSize(&f1), vector<int>(getSize(&f2)));;
   gcs(&lookup, &f1, &f2);
   
+  // Reset the streams and get the GCS result
   f1.clear();
   f1.seekg(0, f1.beg);
   f2.clear();
   f2.seekg(0, f2.beg);
   gcsSol(&lookup, &f1, &f2);
   
+  // Clsoe the files
   f1.close();
   f2.close();
 }
 
 
+/*
+ *  Get the size of a file opened by the stream
+ *  Will reset the stream position to the original state
+ */
 size_t getSize(ifstream *str) {
   int pos = str->tellg();
   str->seekg(0, str->end);
@@ -60,6 +67,11 @@ size_t getSize(ifstream *str) {
   return size;
 }
 
+
+/*
+ *  Solve for the greatest common subsequence given two streams
+ *  Stores the result in a lookup/memoization table
+ */
 int gcs(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   // Get iteration case
   int row = f1->tellg();
@@ -102,6 +114,9 @@ int gcs(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
 }
 
 
+/*
+ *  Retrieve the GCS solution from a lookup/memoization table
+ */
 void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   // Get iteration case
   int row = f1->tellg();
