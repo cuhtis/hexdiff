@@ -62,105 +62,100 @@ size_t getSize(ifstream *str) {
 
 int gcs(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   // Get iteration case
-  int i = f1->tellg();
-  int j = f2->tellg();
+  int row = f1->tellg();
+  int col = f2->tellg();
 
   // Base case
-  char c1, c2;
-  if (!f1->get(c1) || !f2->get(c2)) {
+  char byte1, byte2;
+  if (!f1->get(byte1) || !f2->get(byte2)) {
     return 0;
   }
 
   // Fetch memoized results
-  assert(i < lookup->size() && j < (*lookup)[i].size());
-  if ((*lookup)[i][j] != 0) {
-    return (*lookup)[i][j];
+  assert(row < lookup->size() && col < (*lookup)[row].size());
+  if ((*lookup)[row][col] != 0) {
+    return (*lookup)[row][col];
   }
 
   // Match
-  if (c1 == c2) {
-    (*lookup)[i][j] = 1 + gcs(lookup, f1, f2);
-    return (*lookup)[i][j];
+  if (byte1 == byte2) {
+    (*lookup)[row][col] = 1 + gcs(lookup, f1, f2);
+    return (*lookup)[row][col];
   }
 
   // Branch and return max
   f1->clear();
-  f1->seekg(i, f1->beg);
+  f1->seekg(row, f1->beg);
   f2->clear();
-  f2->seekg(j+1, f2->beg);
+  f2->seekg(col+1, f2->beg);
   int a = gcs(lookup, f1, f2);
 
   f1->clear();
-  f1->seekg(i+1, f1->beg);
+  f1->seekg(row+1, f1->beg);
   f2->clear();
-  f2->seekg(j, f2->beg);
+  f2->seekg(col, f2->beg);
   int b = gcs(lookup, f1, f2);
 
-  (*lookup)[i][j] = a > b ? a : b;
+  // Memoize result
+  (*lookup)[row][col] = a > b ? a : b;
   return a > b ? a : b;
 }
 
 
 void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   // Get iteration case
-  int i = f1->tellg();
-  int j = f2->tellg();
-  char c1, c2;
-  DEBUG(cout << i << "-" << j << ": ");
+  int row = f1->tellg();
+  int col = f2->tellg();
+  char byte1, byte2;
+  DEBUG(cout << row << "-" << col << ": ");
 
-  if (!f1->get(c1) || !f2->get(c2)) {
+  if (!f1->get(byte1) || !f2->get(byte2)) {
     DEBUG(cout << "ERROR" << endl);
     return;
   }
 
-  // Char match
-  DEBUG(cout << c1 << "-" << c2 << ": ");
-  if (c1 == c2) { 
+  // Match
+  DEBUG(cout << byte1 << "-" << byte2 << ": ");
+  if (byte1 == byte2) { 
     DEBUG(cout << "MATCH" << endl);
-    cout << hex(c1) << ": " << c1 << endl;
-    gcsSol(lookup, f1, f2);
-    return;
+    cout << hex(byte1) << ": " << byte1 << endl;
+    return gcsSol(lookup, f1, f2);
   }
   
-  // Bounds checking if we hit the limit
-  bool b1 = i + 1 >= lookup->size();
-  bool b2 = j + 1 >= (*lookup)[i].size();
-  if (b1 || b2) {
-    if (b1 && b2) {
-      DEBUG(cout << lookup->size() << " " << (*lookup)[i].size() << ": ");
+  // Bounds checking if we hit the base case
+  bool rowAtBase = row + 1 >= lookup->size();
+  bool colAtBase = col + 1 >= (*lookup)[row].size();
+  if (rowAtBase || colAtBase) {
+    if (rowAtBase && colAtBase) {
+      DEBUG(cout << lookup->size() << " " << (*lookup)[row].size() << ": ");
       DEBUG(cout << "BASE" << endl);
       return;
-    } else if (b1) {
+    } else if (rowAtBase) {
       DEBUG(cout << "BASE RIGHT" << endl);
-      cout << RED << hex(c2) << ": " << c2 << END << endl;
+      cout << RED << hex(byte2) << ": " << byte2 << END << endl;
       f1->clear();
-      f1->seekg(i);
-    } else if (b2) {
+      f1->seekg(row);
+    } else if (byte2) {
       DEBUG(cout << "BASE DOWN" << endl);
-      cout << GREEN << hex(c1) << ": " << c1 << END << endl;
+      cout << GREEN << hex(byte1) << ": " << byte1 << END << endl;
       f2->clear();
-      f2->seekg(j);
+      f2->seekg(col);
     }
-    gcsSol(lookup, f1, f2);
-    return;
+    return gcsSol(lookup, f1, f2);
   }
   
-  if ((*lookup)[i+1][j] == (*lookup)[i][j+1]) {
-    // Same regardless of which way we go, just take a random path...
-    DEBUG(cout << "GO RAND" << endl);
-    cout << RED << hex(c2) << ": " << c2 << END << endl;
-    f1->seekg(i);
-  } else if ((*lookup)[i+1][j] > (*lookup)[i][j+1]) {
+  // Step case
+  if ((*lookup)[row+1][col] > (*lookup)[row][col+1]) {
     // Go down
     DEBUG(cout << "GO DOWN" << endl);
-    cout << GREEN << hex(c1) << ": " << c1 << END << endl;
-    f2->seekg(j);
+    cout << GREEN << hex(byte1) << ": " << byte1 << END << endl;
+    f2->seekg(col);
   } else {
-    DEBUG(cout << "GO RIGHT" << endl);
-    cout << RED << hex(c2) << ": " << c2 << END << endl;
     // Go right
-    f1->seekg(i);
+    DEBUG(cout << "GO RIGHT" << endl);
+    cout << RED << hex(byte2) << ": " << byte2 << END << endl;
+    f1->seekg(row);
   }
-  gcsSol(lookup, f1, f2);
+  return gcsSol(lookup, f1, f2);
 }
 
