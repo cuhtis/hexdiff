@@ -12,6 +12,10 @@
 #define ARG_KEY_RECURSIVE 'r'
 #define ARG_KEY_VERBOSE   'v'
 
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define END "\033[0m"
+
 const char *argp_program_version = "Hexdiff v0.1";
 const char *argp_program_bug_address = "curtis.li@nyu.edu";
 static char doc[] = "Get the diff of binary files.";
@@ -49,5 +53,6 @@ inline HexCharStruct hex(unsigned char _c) {
 size_t getSize(std::ifstream *str);
 
 int gcs(std::vector< std::vector<int> > *lookup, std::ifstream *f1, std::ifstream *f2);
+void gcsSol(std::vector< std::vector<int> > *lookup, std::ifstream *f1, std::ifstream *f2);
 
 #endif
