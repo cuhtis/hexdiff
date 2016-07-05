@@ -24,11 +24,13 @@
 using namespace std;
 
 
+static int rowCount = 0;
+static struct arguments arguments;
+
 /*
  *  Main function
  */
 int main(int argc, char** argv) {
-  struct arguments arguments;
   ifstream f1, f2;
 
   // Parse the CLI
@@ -49,6 +51,8 @@ int main(int argc, char** argv) {
   f2.seekg(0, f2.beg);
   gcsSol(&lookup, &f1, &f2);
   
+  if (rowCount != 0) cout << endl;
+
   // Clsoe the files
   f1.close();
   f2.close();
@@ -133,7 +137,7 @@ void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   DEBUG(cout << byte1 << "-" << byte2 << ": ");
   if (byte1 == byte2) { 
     DEBUG(cout << "MATCH" << endl);
-    cout << hex(byte1) << ": " << byte1 << endl;
+    fmtPrint(BLACK, byte2);
     return gcsSol(lookup, f1, f2);
   }
   
@@ -147,12 +151,12 @@ void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
       return;
     } else if (rowAtBase) {
       DEBUG(cout << "BASE RIGHT" << endl);
-      cout << RED << hex(byte2) << ": " << byte2 << END << endl;
+      fmtPrint(RED, byte2);
       f1->clear();
       f1->seekg(row);
     } else if (byte2) {
       DEBUG(cout << "BASE DOWN" << endl);
-      cout << GREEN << hex(byte1) << ": " << byte1 << END << endl;
+      fmtPrint(GREEN, byte1);
       f2->clear();
       f2->seekg(col);
     }
@@ -163,14 +167,19 @@ void gcsSol(vector< vector<int> > *lookup, ifstream *f1, ifstream *f2) {
   if ((*lookup)[row+1][col] > (*lookup)[row][col+1]) {
     // Go down
     DEBUG(cout << "GO DOWN" << endl);
-    cout << GREEN << hex(byte1) << ": " << byte1 << END << endl;
+    fmtPrint(GREEN, byte1);
     f2->seekg(col);
   } else {
     // Go right
     DEBUG(cout << "GO RIGHT" << endl);
-    cout << RED << hex(byte2) << ": " << byte2 << END << endl;
+    fmtPrint(RED, byte2);
     f1->seekg(row);
   }
   return gcsSol(lookup, f1, f2);
 }
 
+void fmtPrint(const char *colour, char c) {
+  cout << colour << hex(c) << " " << END;
+  rowCount = (rowCount + 1) % arguments.format;
+  if (rowCount == 0) cout << endl;
+}

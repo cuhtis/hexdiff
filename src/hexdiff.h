@@ -26,4 +26,6 @@ size_t getSize(std::ifstream *str);
 int gcs(std::vector< std::vector<int> > *lookup, std::ifstream *f1, std::ifstream *f2);
 void gcsSol(std::vector< std::vector<int> > *lookup, std::ifstream *f1, std::ifstream *f2);
 
+void fmtPrint(const char *colour, char c);
+
 #endif

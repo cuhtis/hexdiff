@@ -3,6 +3,7 @@
  *  Written by Curtis Li
  */
 
+#include <stdlib.h>
 #include <argp.h>
 #include "parsecli.h"
 
@@ -10,9 +11,12 @@ const char *argp_program_version = "Hexdiff v0.1";
 const char *argp_program_bug_address = "curtis.li@nyu.edu";
 
 void parseCli(struct arguments *arguments, int argc, char **argv) {
-  arguments->quiet = 0;
-  arguments->recursive = 0;
-  arguments->verbose = 0;
+  arguments->format = DEFAULT_FORMAT;
+  arguments->match = false;
+  arguments->quiet = false;
+  arguments->recursive = false;
+  arguments->simple = false;
+  arguments->verbose = false;
 
   argp_parse(&argp, argc, argv, 0, 0, arguments);
 }
@@ -20,16 +24,25 @@ void parseCli(struct arguments *arguments, int argc, char **argv) {
 error_t parse_opt(int key, char *arg, struct argp_state *state) {
   struct arguments *arguments =  (struct arguments *) state->input;
   switch (key) {
+    case ARG_KEY_FORMAT:
+      arguments->format = arg ? atoi(arg) : DEFAULT_FORMAT;
+      break;
+    case ARG_KEY_MATCH:
+      arguments->match = true;
+      break;
     case ARG_KEY_QUIET:
-      arguments->quiet = 1;
-      arguments->verbose = 0;
+      arguments->quiet = true;
+      arguments->verbose = false;
       break;
     case ARG_KEY_RECURSIVE:
-      arguments->recursive = 1;
+      arguments->recursive = true;
+      break;
+    case ARG_KEY_SIMPLE:
+      arguments->simple = true;
       break;
     case ARG_KEY_VERBOSE:
-      arguments->quiet = 0;
-      arguments->verbose = 1;
+      arguments->quiet = false;
+      arguments->verbose = true;
       break;
     case ARGP_KEY_ARG:
       if (!arguments->arg1) {
