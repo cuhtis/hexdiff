@@ -14,6 +14,13 @@ Created by Curtis Li.
 
 ## Installation
 
+Hexdiff requires argp to build. You can get argp on Mac OS by doing:
+```
+brew install argp-standalone
+```
+
+To build the system, run:
+
 ```
 git clone https://github.com/curtis99877/hexdiff.git
 cd hexdiff && make
@@ -22,8 +29,9 @@ cd hexdiff && make
 ## Features
 
 * Get the diff of binary files
+* Prints the differences in coloured text
+* Custom formatting of number of bytes per row output
 
 ## TODO
 
-* Add output customization
 * Create a testing suite
