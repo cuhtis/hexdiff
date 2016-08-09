@@ -1,5 +1,9 @@
 # Hexdiff
 
+```
+Warning: Do not run on large files.
+```
+
 Get the diff of binary files.
 
 Implemented by reversing the solution to the Greatest-Common-Subsequence problem for two byte streams.
